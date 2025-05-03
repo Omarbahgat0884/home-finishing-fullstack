@@ -45,12 +45,20 @@ export const authConfig = {
   ],
   adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      const dbUser = await db.user.findUnique({
+        where: { id: user.id },
+        select: { isAdmin: true },
+      });
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          isAdmin: dbUser?.isAdmin ?? false,
+        },
+      };
+    },
   },
 } satisfies NextAuthConfig;
