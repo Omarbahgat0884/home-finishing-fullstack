@@ -63,6 +63,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    isAdmin       Boolean   @default(false)
 }
 
 model VerificationToken {
@@ -71,4 +72,81 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// MY SCHEMA
+model ServiceCategory {
+    id          String    @id @default(cuid())
+    name        String
+    description String?
+    services    Service[]
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    @@map("service_categories")
+}
+
+model Service {
+    id          String          @id @default(cuid())
+    name        String
+    description String?
+    price       Decimal
+    imageUrl    String?
+    category    ServiceCategory @relation(fields: [categoryId], references: [id])
+    categoryId  String
+    bookings    Booking[]
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
+
+    @@map("services")
+}
+
+model Contractor {
+    id             String    @id @default(cuid())
+    name           String
+    phone          String
+    email          String    @unique
+    specialization String?
+    rating         Float?    @default(0)
+    bookings       Booking[]
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+
+    @@map("contractors")
+}
+
+model Customer {
+    id        String    @id @default(cuid())
+    name      String
+    email     String    @unique
+    phone     String
+    bookings  Booking[]
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    @@map("customers")
+}
+
+model Booking {
+    id           String        @id @default(cuid())
+    service      Service       @relation(fields: [serviceId], references: [id])
+    serviceId    String
+    customer     Customer      @relation(fields: [customerId], references: [id])
+    customerId   String
+    contractor   Contractor    @relation(fields: [contractorId], references: [id])
+    contractorId String
+    date         DateTime
+    status       BookingStatus @default(PENDING)
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+
+    @@map("bookings")
+}
+
+enum BookingStatus {
+    PENDING
+    CONFIRMED
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
 }
