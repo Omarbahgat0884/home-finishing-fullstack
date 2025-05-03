@@ -15,10 +15,14 @@ export const contractorRouter = createTRPCRouter({
       return await ctx.db.contractor.findMany({
         where: input?.specialization
           ? {
-              specialization: {
-                contains: input.specialization,
-                mode: "insensitive",
-              },
+              AND: [
+                { specialization: { not: null } }, // exclude nulls
+                {
+                  specialization: {
+                    contains: input.specialization,
+                  },
+                },
+              ],
             }
           : undefined,
       });
