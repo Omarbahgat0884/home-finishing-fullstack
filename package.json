@@ -17,7 +17,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
-    "start": "next start"
+    "start": "next start",
+    "test": "pnpm exec playwright test --workers 1 --project chromium"
     
   },
   "prisma": {

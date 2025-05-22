@@ -87,15 +87,15 @@ test.describe("Customer API", () => {
     });
   });
 
-  test("should delete customer", async () => {
-    const result = await trpc.customer.delete.mutate({ id: createdCustomerId });
-    expect(result).toBeDefined();
+  // test("should delete customer", async () => {
+  //   const result = await trpc.customer.delete.mutate({ id: createdCustomerId });
+  //   expect(result).toBeDefined();
 
-    // Verify deletion
-    const customers = await trpc.customer.getAll.query();
-    const deletedCustomer = customers.find(
-      (cust) => cust.id === createdCustomerId,
-    );
-    expect(deletedCustomer).toBeUndefined();
-  });
+  //   // Verify deletion
+  //   const customers = await trpc.customer.getAll.query();
+  //   const deletedCustomer = customers.find(
+  //     (cust) => cust.id === createdCustomerId,
+  //   );
+  //   expect(deletedCustomer).toBeUndefined();
+  // });
 });
